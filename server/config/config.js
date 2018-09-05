@@ -1,4 +1,4 @@
-
+//ahoj
 // nastaveni env - v jakem jsme prostredi (development, test nebo production)
 //pokud spoustime na heroku je to defaultne u nich process.env.NODE_ENV = 'production', kdyz spoustime lokalne tak NODE_ENV neexistuje a pouzije se development
 // v package.json se NODE_ENV nastavuje na 'test' pokud se spousti testovaci skript na mocha testovani
