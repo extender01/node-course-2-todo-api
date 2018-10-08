@@ -101,9 +101,19 @@ app.post('/users', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
   var user = new User(body);
 
-  user.save().then((user) => {
-    res.send(user);
-  }).catch((e) => {
+  user.save().then(() => {
+    
+    //provedeni fce generateAuthToken aby se vygeneroval token
+    //return aby se dalo pouzit dalsi then, protoze navratova hodnota te fce je Promise a jako argument metody then() je v users.js definovan token
+    return user.generateAuthToken()
+    
+   
+  //token v then() posleme klientovi v hlavicce od response  
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
+  })
+  
+  .catch((e) => {
     res.status(400).send(e);
   })
 });
