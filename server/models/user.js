@@ -50,6 +50,8 @@ UserSchema.methods.toJSON = function () {
   return _.pick(userObject, ['_id', 'email'])
 }
 
+
+
 //vytvoreni nove metody typu instance (ma pristup ke konkretnim polozkam v db)
 UserSchema.methods.generateAuthToken = function () {
   let user = this;
@@ -63,8 +65,29 @@ UserSchema.methods.generateAuthToken = function () {
     //tady return aby se ten token dal pouzit v dalsim then() - je to vlastne hodnota argumentu do then() kterou ta promise bude vracet
     return token
   });
-
 };
+
+//statics pro metody typu model (nepracuji s instancemi)
+UserSchema.statics.findByToken = function (token) {
+    let User = this;
+    let decoded;
+
+    try {
+      decoded = jwt.verify(token, 'abc123');
+    } catch (e) {
+        return Promise.reject(); //kratsi verze deklarace promise, ktera hned provede reject variantu
+    }
+
+    //User.findOne() vraci promise takze dame return aby se ta promise vratila do server.js odkus se findByToken bude volat a budeme moct pouzit then()
+    return User.findOne({
+        _id: decoded._id,
+        'tokens.token': token,  //key musi byt v uvozovkach kdyz pouzivame dot notation
+        'tokens.access': 'auth'
+    })
+};
+
+
+
 
 
 
