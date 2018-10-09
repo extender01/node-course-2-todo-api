@@ -68,6 +68,27 @@ UserSchema.methods.generateAuthToken = function () {
   });
 };
 
+
+
+
+
+UserSchema.methods.removeToken = function (token) {
+  let user = this;
+  return user.update({
+    $pull: { //pull najde polozku v db a smaze cely objekt ve kterem ta polozka je
+      tokens: {
+        token: token
+      }
+    }
+  });
+};
+
+
+
+
+
+
+
 //statics pro metody typu model (nepracuji s instancemi)
 UserSchema.statics.findByToken = function (token) {
     let User = this;
